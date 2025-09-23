@@ -3,7 +3,7 @@ name: Enable Auto Merge
 on: pull_request
 
 permissions:
-  contents: write
+  contents: read
   pull-requests: write
 
 jobs:
