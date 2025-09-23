@@ -1,0 +1,7 @@
+onlyBuiltDependencies:
+  - esbuild
+
+# one day
+minimumReleaseAge: 1440
+minimumReleaseAgeExclude:
+ - pnpm
