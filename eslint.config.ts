@@ -44,7 +44,7 @@ export default defineConfig(
       parser,
       parserOptions: {
         project: './tsconfig-eslint.json',
-        tsconfigRootDir: import.meta.dirname,
+        tsconfigRootDir: __dirname,
       },
     },
     plugins: {
@@ -66,10 +66,11 @@ export default defineConfig(
       '@stylistic/indent': ['error', 2],
       '@stylistic/comma-dangle': ['error', 'always-multiline'],
       '@stylistic/quotes': ['error', 'single'],
+      '@stylistic/max-len': ['error', { code: 120 }],
       'import/no-unresolved': ['error', { ignore: ['^~solid-pages$'] }],
       '@typescript-eslint/no-unsafe-assignment': 'error',
       '@typescript-eslint/no-unsafe-member-access': 'error',
-      '@typescript-eslint/no-unsafe-call': 'error'
+      '@typescript-eslint/no-unsafe-call': 'error',
     }
   },
 );
