@@ -3,6 +3,7 @@
 - Comments should be provided in Japanese by default, while maintaining English-based technical analysis to ensure review quality.
 - When you find a problem, suggest a solution.
 - If you find a problem that is not in the code, point it out.
+- Code comments should be written in Japanese.
 
 ## Security review
 
