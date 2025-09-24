@@ -3,11 +3,21 @@
   --modal-text: black;
   --link-text: blue;
   --modal-close: #666;
+  --button-bg: #007bff;
+  --button-text: white;
+  --button-hover-bg: #0056b3;
+  --button-disabled-bg: #cccccc;
+  --button-disabled-text: #666666;
   @media (prefers-color-scheme: dark) {
     --modal-bg: #333;
     --modal-text: #fff;
     --link-text: #4ea1f3;
     --modal-close: #999;
+    --button-bg: #0056b3;
+    --button-text: white;
+    --button-hover-bg: #003d80;
+    --button-disabled-bg: #555555;
+    --button-disabled-text: #999999;
   }
 }
 
@@ -37,8 +47,56 @@ th {
   color: #eee;
 }
 
+button {
+  background-color: var(--button-bg);
+  color: var(--button-text);
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background-color 0.3s ease;
+}
+
+button:hover:not(:disabled) {
+  background-color: var(--button-hover-bg);
+}
+
+button:focus:not(:disabled) {
+  outline: 2px solid var(--button-bg);
+  outline-offset: 1px;
+  box-shadow: 0 0 0 1px rgba(0, 123, 255, 0.25);
+}
+
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+  background-color: var(--button-disabled-bg);
+  color: var(--button-disabled-text);
+  outline: none;
+}
+
 .github-icon {
   color: #000;
+}
+
+@keyframes modal-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.modal-fade-in {
+  animation: modal-fade-in 0.3s ease-in-out forwards;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .modal-fade-in {
+    animation: none;
+  }
 }
 
 @media (prefers-color-scheme: dark) {

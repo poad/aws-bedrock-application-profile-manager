@@ -23,10 +23,8 @@ function App() {
   const [inferenceProfilesResource] = createInferenceProfilesResource(selectedRegion);
 
   const [tagsResource] = createTagsForResourceResource(selectedTarget);
-  const [isModalOpen, setIsModalOpen] = createSignal(false);
 
-  const openModal = () => setIsModalOpen(true);
-  const closeModal = () => setIsModalOpen(false);
+  const closeModal = () => setSelectedTarget((prev) => ({...prev, open: false}));
 
   return (
     <>
@@ -75,30 +73,28 @@ function App() {
                           {item.models?.map((model) => (<li>{model.modelArn}</li>))}
                         </ul>
                       </td>
-                      <td><button
-                        type="button"
-                        style={{
-                          background: 'none',
-                          border: 'none',
-                          color: 'var(--link-text, blue)',
-                          'text-decoration': 'underline',
-                          cursor: 'pointer',
-                        }}
-                        on:click={() => {
-                          batch(() => {
-                            setSelectedTarget({
-                              region: selectedRegion(),
-                              arn: item.inferenceProfileArn ?? '',
-                              open: true,
+                      <td>
+                        <button
+                          type="button"
+                          disabled={
+                            // モーダルが開いているときは全てのボタンを無効化
+                            selectedTarget().open
+                          }
+                          aria-label="View Tags"
+                          on:click={() => {
+                            batch(() => {
+                              setSelectedTarget({
+                                region: selectedRegion(),
+                                arn: item.inferenceProfileArn ?? '',
+                                open: true,
+                              });
                             });
-                            openModal();
-                          });
-                        }}>tags</button></td>
+                          }}>tags</button></td>
                     </tr>
                   ))}
                 </tbody>
               </table>
-              <Modal isOpen={isModalOpen()} onClose={closeModal}>
+              <Modal isOpen={selectedTarget().open} onClose={closeModal}>
                 <Show when={tagsResource.error as unknown as Error}>
                   <p style={{ color: 'red' }}>{(tagsResource.error as unknown as Error).message}</p>
                 </Show>
