@@ -18,9 +18,6 @@ permissions:
 jobs:
   build:
     name: Build
-    strategy:
-      matrix:
-        node-version: [22.x, 24.x]
     runs-on: ubuntu-24.04-arm
     steps:
     - name: Checkout
@@ -34,12 +31,13 @@ jobs:
             args: [--no-frozen-lockfile]
           - args: [--global, esbuild]
 
-    - name: Setup Node.js ${{ matrix.node-version }}
+    - name: Setup Node.js
       uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5.0.0
       with:
-        node-version: ${{ matrix.node-version }}
+        node-version: 'lts/*'
         check-latest: true
         cache: pnpm
+        package-manager-cache: true
 
     - name: lint
       run: pnpm lint

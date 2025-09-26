@@ -13,8 +13,6 @@ jobs:
     if: github.event.pull_request.draft == false
 
     steps:
-      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
-
       - name: Enable auto-merge for Pull Request
         run: |
           gh pr review --approve "$PR_URL"
