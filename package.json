@@ -11,8 +11,8 @@
     "lint-fix": "eslint --fix"
   },
   "dependencies": {
-    "@aws-sdk/client-account": "^3.894.0",
-    "@aws-sdk/client-bedrock": "^3.894.0",
+    "@aws-sdk/client-account": "^3.896.0",
+    "@aws-sdk/client-bedrock": "^3.896.0",
     "solid-icons": "^1.1.0",
     "solid-js": "^1.9.9"
   },
