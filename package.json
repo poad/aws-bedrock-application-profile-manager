@@ -11,8 +11,8 @@
     "lint-fix": "eslint --fix"
   },
   "dependencies": {
-    "@aws-sdk/client-account": "^3.896.0",
-    "@aws-sdk/client-bedrock": "^3.896.0",
+    "@aws-sdk/client-account": "^3.899.0",
+    "@aws-sdk/client-bedrock": "^3.899.0",
     "solid-icons": "^1.1.0",
     "solid-js": "^1.9.9"
   },
@@ -21,7 +21,7 @@
     "@eslint/eslintrc": "^3.3.1",
     "@eslint/js": "^9.36.0",
     "@stylistic/eslint-plugin": "^5.4.0",
-    "@types/node": "^24.5.2",
+    "@types/node": "^24.6.0",
     "eslint": "^9.36.0",
     "eslint-import-resolver-typescript": "^4.4.4",
     "eslint-plugin-import": "^2.32.0",
@@ -30,7 +30,7 @@
     "jiti": "^2.6.0",
     "pnpm": "^10.17.1",
     "typescript": "^5.9.2",
-    "typescript-eslint": "^8.44.1",
+    "typescript-eslint": "^8.45.0",
     "vite": "^7.1.7",
     "vite-plugin-solid": "^2.11.8"
   },
