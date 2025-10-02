@@ -1,6 +1,6 @@
 import { BedrockClient, ListTagsForResourceCommand } from '@aws-sdk/client-bedrock';
 import { createResource, type Accessor } from 'solid-js';
-import { env } from '../../utils';
+import { createBedrockClient } from '../bedrock/client';
 
 export const createTagsForResourceResource = (selected: Accessor<{
   region?: string,
@@ -21,14 +21,7 @@ export const createTagsForResourceResource = (selected: Accessor<{
     if (!target.arn || !target.region) {
       return [];
     }
-    const client = new BedrockClient({
-      region: target.region,
-      credentials: {
-        accessKeyId: env.AWS_ACCESS_KEY_ID ?? '',
-        secretAccessKey: env.AWS_SECRET_ACCESS_KEY ?? '',
-        sessionToken: env.AWS_SESSION_TOKEN ?? '',
-      },
-    });
+    const client = createBedrockClient(target.region);
     return await listTagsForResource({ client, arn: target.arn });
   });
 

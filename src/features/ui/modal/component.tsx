@@ -67,8 +67,6 @@ export const Modal = (props: {
             'color': 'var(--modal-text, black)',
             'border-radius': '8px',
             'box-shadow': '0 25px 50px -12px rgba(0, 0, 0, 0.25)',
-            'max-width': '400px',
-            width: '90%',
             position: 'relative',
           }}
         >
