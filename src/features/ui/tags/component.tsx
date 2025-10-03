@@ -4,8 +4,8 @@ import { FaSolidTrash } from 'solid-icons/fa';
 import { IoAddCircleSharp } from 'solid-icons/io';
 import { Loading } from '../loading';
 
-const keyPattern = /^[a-zA-Z0-9\s._:/=+@-]*$/;
-const valuePattern = /^[a-zA-Z0-9\s._:/=+@-]*$/;
+const keyPattern = /^[a-zA-Z0-9+\-=._:/@]{1,128}$/;
+const valuePattern = /^[a-zA-Z0-9+\-=._:/@\s]{0,256}$/;
 
 /**
  * タグ入力フォームコンポーネント。
