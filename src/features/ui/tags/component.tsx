@@ -3,8 +3,8 @@ import './component.module.css';
 import { FaSolidTrash } from 'solid-icons/fa';
 import { IoAddCircleSharp } from 'solid-icons/io';
 
-const keyPattern = /[a-zA-Z0-9\s._:/=+@-]*/;
-const valuePattern = /[a-zA-Z0-9\s._:/=+@-]*/;
+const keyPattern = /^[a-zA-Z0-9\s._:/=+@-]*$/;
+const valuePattern = /^[a-zA-Z0-9\s._:/=+@-]*$/;
 
 export default function NewTagsForm(props: {
   'on:change': (data: { key: string, value: string }[], validator: () => boolean) => void
