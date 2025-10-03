@@ -16,8 +16,8 @@ interface NewInferenceProfileFormProps {
   'on:cancel': () => void,
 }
 
-const inferenceProfileNamePattern = /([0-9a-zA-Z][ _-]?)+/;
-const descriptionPattern = /([0-9a-zA-Z:.][ _-]?)+/;
+const inferenceProfileNamePattern = /^[0-9a-zA-Z]([0-9a-zA-Z _-]*[0-9a-zA-Z])?$/;
+const descriptionPattern = /^[0-9a-zA-Z:.][0-9a-zA-Z:. _-]*$/;
 const defaultFormData = { inferenceProfileName: '', copyFrom: '' };
 
 function NewInferenceProfileForm(props: NewInferenceProfileFormProps) {
