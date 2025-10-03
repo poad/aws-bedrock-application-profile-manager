@@ -1,7 +1,7 @@
 import { createEffect, createSignal, For, Show } from 'solid-js';
 import { createSystemDefinedInferenceProfilesResource } from './resources';
 import { Loading } from '../ui/loading';
-import NewTagsForm from '../ui/tags/component';
+import { NewTagsForm } from '../ui/tags/component';
 import { createFoundationModelsResource } from '../foundation-models/resources';
 
 export interface FormFields {

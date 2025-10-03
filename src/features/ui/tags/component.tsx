@@ -1,7 +1,8 @@
-import { createSignal, Index, Show } from 'solid-js';
+import { createSignal, Index, Show, type Resource } from 'solid-js';
 import './component.module.css';
 import { FaSolidTrash } from 'solid-icons/fa';
 import { IoAddCircleSharp } from 'solid-icons/io';
+import { Loading } from '../loading';
 
 const keyPattern = /^[a-zA-Z0-9\s._:/=+@-]*$/;
 const valuePattern = /^[a-zA-Z0-9\s._:/=+@-]*$/;
@@ -10,8 +11,11 @@ const valuePattern = /^[a-zA-Z0-9\s._:/=+@-]*$/;
  * タグ入力フォームコンポーネント。
  * @param {object} props - コンポーネントのプロパティ
  * @param {(data: { key: string, value: string }[], validator: () => boolean) => void} props['on:change'] - 入力変更時のコールバック
+ * @remarks
+ * 利用例：AWSリソースのタグ編集UIとして利用します。
+ * 注意：キー・値のバリデーション、重複チェック、空欄チェックを内部で行います。アクセシビリティ対応のため、ラベルやエラーメッセージ表示も考慮してください。
  */
-export default function NewTagsForm(props: {
+export function NewTagsForm(props: {
   'on:change': (data: { key: string, value: string }[], validator: () => boolean) => void
 }) {
   const [items, setItems] = createSignal<{ id: number, key: string, value: string, error?: string }[]>(
@@ -48,7 +52,7 @@ export default function NewTagsForm(props: {
       return false;
     }
 
-    if (items().map(({value}) => value).some((value) => !valuePattern.test(value))) {
+    if (items().map(({ value }) => value).some((value) => !valuePattern.test(value))) {
       setItems((prev) => prev.map(item =>
         !valuePattern.test(item.value) ? { ...item, error: '値に使用できない文字が含まれています' } : item,
       ));
@@ -181,4 +185,90 @@ export default function NewTagsForm(props: {
       </tbody>
     </table>
   );
+}
+
+export function TagListTable(props: {
+  readonly targetProfileArn?: string
+  readonly tagsResource: Resource<{
+    key?: string;
+    value?: string;
+  }[]>
+}) {
+  return (<div class="w-[400px]">
+    <Show
+      when={!props.tagsResource.error}
+      fallback={
+        <p style={{ color: 'red' }}>{(props.tagsResource.error as unknown as Error).message}</p>
+      }>
+      <Show when={!props.tagsResource.loading} fallback={<Loading />}>
+        <div>
+          <h4>Tags for {props.targetProfileArn}</h4>
+        </div>
+        <Show when={props.tagsResource()?.length !== 0} fallback={<p>タグは設定されていません。</p>}>
+          <p
+            style={{
+              color: 'var(--modal-text, #666)',
+              'margin-bottom': '24px',
+              'line-height': '1.5',
+            }}
+          >
+            リソースに付与されているタグの一覧です。
+          </p>
+          <table style={{ 'margin-bottom': '24px', width: '100%' }} class="tag-table">
+            <thead>
+              <tr>
+                <th>
+                  Key
+                </th>
+                <th>
+                  Value
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <Index each={props.tagsResource()}>
+                {(tag) => (
+                  <tr>
+                    <td
+                      class="p-[8px] border-b border-b-solid border-b-[#ddd]"
+                    >
+                      {tag().key}
+                    </td>
+                    <td
+                      class="p-[8px] border-b border-b-solid border-b-[#ddd]"
+                    >
+                      {tag().value}
+                    </td>
+                  </tr>
+                )}
+              </Index>
+            </tbody>
+          </table>
+        </Show>
+        <p
+          style={{
+            color: 'var(--modal-text, #666)',
+            'margin-bottom': '24px',
+            'line-height': '1.5',
+          }}
+        >
+          タグの編集は、AWS CLI から行ってください。
+        </p>
+      </Show>
+    </Show>
+  </div>
+  )
+}
+
+export function ViewTagsButton(props: {
+  disabled: boolean,
+  'on:click': () => void,
+}) {
+  return (
+    <button
+      type="button"
+      disabled={props.disabled}
+      aria-label="View Tags"
+      on:click={props['on:click']}>tags</button>
+  )
 }

@@ -6,6 +6,10 @@ import { createBedrockClient } from '../bedrock/client';
  * Bedrockリソース（ARN指定）のタグ一覧を取得するリソースを生成します。
  * @param {Accessor<{region?: string, arn?: string}>} selected - リージョン・ARN情報のアクセサ
  * @returns {ReturnType<typeof createResource>} Solid.jsのリソース（{key?: string, value?: string}[]）
+ * @remarks
+ * 利用例：リソース詳細画面でタグ一覧を表示する際に利用します。
+ * 注意：ARNやリージョンが未指定の場合は空配列を返します。APIエラー時は例外が発生します。
+ * 副作用：AWS Bedrock APIへのリクエストが発生します。
  */
 export const createTagsForResourceResource = (selected: Accessor<{
   region?: string,

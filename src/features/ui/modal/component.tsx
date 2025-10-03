@@ -8,6 +8,9 @@ import type { DOMElement } from 'solid-js/jsx-runtime';
  * @param {boolean} props.isOpen - モーダル表示状態
  * @param {() => void} props['on:close'] - 閉じる時のコールバック
  * @param {JSX.Element} props.children - モーダル内の表示内容
+ * @remarks
+ * 利用例：各種ダイアログ表示に利用します。
+ * 注意：ESCキーやBackdropクリックで閉じる動作をサポート。アクセシビリティ対応のため、フォーカス管理やキーボード操作も考慮してください。
  */
 export const Modal = (props: {
   isOpen: boolean,

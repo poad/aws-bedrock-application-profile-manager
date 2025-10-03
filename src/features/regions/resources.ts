@@ -6,6 +6,10 @@ import { credentials } from '../utils';
  * AWSアカウントの有効リージョン一覧を取得するリソースを生成します。
  * @param {string} defaultRegion - デフォルトリージョン名
  * @returns {ReturnType<typeof createResource>} Solid.jsのリソース（string[]）
+ * @remarks
+ * 利用例：UIでリージョン選択肢を表示する際に利用します。
+ * 注意：APIレスポンスが空の場合は空配列を返します。AWS権限不足やリージョン指定ミスに注意。
+ * 副作用：AWS Account APIへのリクエストが発生します。
  */
 export const createRegionsResource = (defaultRegion: string) => {
   const listRegion = async (props: { client: AccountClient, regions: string[], nextToken?: string }) => {

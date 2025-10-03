@@ -13,6 +13,10 @@ import type { FormFields } from './component';
  * APPLICATIONタイプのBedrock推論プロファイル一覧を取得するリソースを生成します。
  * @param {Accessor<string>} selectedRegion - AWSリージョン名のアクセサ
  * @returns {ReturnType<typeof createResource>} Solid.jsのリソース（InferenceProfileSummary[]）
+ * @remarks
+ * 利用例：アプリケーション用推論プロファイルの一覧表示に利用します。
+ * 注意：APIレスポンスが空の場合は空配列を返します。AWS権限不足やリージョン指定ミスに注意。
+ * 副作用：AWS Bedrock APIへのリクエストが発生します。
  */
 export const createApplicationInferenceProfilesResource = (selectedRegion: Accessor<string>) => {
   const listInferenceProfiles = async (props: {
@@ -48,6 +52,10 @@ export const createApplicationInferenceProfilesResource = (selectedRegion: Acces
  * SYSTEM_DEFINEDタイプのBedrock推論プロファイル一覧を取得するリソースを生成します。
  * @param {string} selectedRegion - AWSリージョン名
  * @returns {ReturnType<typeof createResource>} Solid.jsのリソース（InferenceProfileSummary[]）
+ * @remarks
+ * 利用例：システム定義プロファイルの一覧表示に利用します。
+ * 注意：APIレスポンスが空の場合は空配列を返します。AWS権限不足やリージョン指定ミスに注意。
+ * 副作用：AWS Bedrock APIへのリクエストが発生します。
  */
 export const createSystemDefinedInferenceProfilesResource = (selectedRegion: string) => {
   const listInferenceProfiles = async (props: {
@@ -84,6 +92,10 @@ export const createSystemDefinedInferenceProfilesResource = (selectedRegion: str
  * @param {string} region - AWSリージョン名
  * @param {Accessor<FormFields | undefined>} data - フォームデータのアクセサ
  * @returns {ReturnType<typeof createResource>} Solid.jsのリソース
+ * @remarks
+ * 利用例：フォーム送信時に新規プロファイル作成APIを呼び出します。
+ * 注意：フォームデータが未定義の場合は空配列を返します。APIエラー時は例外が発生します。
+ * 副作用：AWS Bedrock APIへのリクエストが発生します。
  */
 export const createNewInferenceProfileResource = (
   region: string,
@@ -110,6 +122,10 @@ export const createNewInferenceProfileResource = (
  * @param {string} region - AWSリージョン名
  * @param {Accessor<string | undefined>} target - 削除対象IDのアクセサ
  * @returns {ReturnType<typeof createResource>} Solid.jsのリソース
+ * @remarks
+ * 利用例：削除ボタン押下時にAPIを呼び出します。
+ * 注意：削除対象IDが未定義の場合は空配列を返します。APIエラー時は例外が発生します。
+ * 副作用：AWS Bedrock APIへのリクエストが発生します。
  */
 export const createDeleteInferenceProfileResource = (region: string, target:  Accessor<string | undefined>) => {
   return createResource(target, async () => {
