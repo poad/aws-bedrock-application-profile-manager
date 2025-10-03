@@ -33,7 +33,8 @@ export default defineConfig(
   },
   eslint.configs.recommended,
   pluginPromise.configs['flat/recommended'],
-  ...configs.recommended,
+  ...configs.strict,
+  ...configs.stylistic,
   {
     files: ['src/**/*.tsx', 'src/**/*.ts', 'vite-env.d.ts', 'vite.config.ts', 'eslint.config.ts'],
     ...solid,

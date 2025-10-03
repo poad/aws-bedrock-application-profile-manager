@@ -66,7 +66,7 @@ function App() {
     if (!deleteInferenceProfileResult.loading) {
       // Profileの削除が完了したら(エラーも含む)
       if (deleteInferenceProfileResult.error) {
-        setError(createInferenceProfileResult.error as unknown as Error);
+        setError(deleteInferenceProfileResult.error as unknown as Error);
       } else {
         refetch();
         setIsOpenCreateModal(false);

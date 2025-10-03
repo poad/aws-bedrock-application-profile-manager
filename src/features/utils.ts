@@ -2,7 +2,7 @@
  * Viteの環境変数を取得します。
  * @remarks
  * AWS認証情報（AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, AWS_SESSION_TOKENなど）を含みます。
- * 
+ *
  * 利用例：
  *   env.AWS_ACCESS_KEY_ID でアクセスキーIDを取得できます。
  * 注意：Viteのimport.meta.envはビルド時に静的展開されるため、動的な値は利用できません。
@@ -26,10 +26,10 @@ const validateCredentials = () => {
  * @remarks
  * 認証情報が不足している場合は例外を投げます。
  * AWS SDKのクライアント生成時に利用します。
- * 
+ *
  * 利用例：
  *   new BedrockClient({ region, credentials })
- * 
+ *
  * @property {string} accessKeyId - AWSアクセスキーID
  * @property {string} secretAccessKey - AWSシークレットアクセスキー
  * @property {string | undefined} sessionToken - AWSセッショントークン（オプション）
@@ -37,8 +37,8 @@ const validateCredentials = () => {
 export const credentials = (() => {
   validateCredentials();
   return {
-    accessKeyId: env.AWS_ACCESS_KEY_ID!,
-    secretAccessKey: env.AWS_SECRET_ACCESS_KEY!,
+    accessKeyId: env.AWS_ACCESS_KEY_ID ?? '',
+    secretAccessKey: env.AWS_SECRET_ACCESS_KEY ?? '',
     sessionToken: env.AWS_SESSION_TOKEN,
   };
 })();
