@@ -57,8 +57,8 @@ function App() {
       // Profileの作成が完了(エラーも含む)したら
       if (createInferenceProfileResult.error) {
         const error = createInferenceProfileResult.error;
-        const errorMessage = error instanceof Error ? error.message : String(error);
-        setError(new Error(`プロファイル作成エラー: ${errorMessage}`));
+        const errorMessage = error instanceof Error ? error.message : 'プロファイル作成中にエラーが発生しました';
+        setError(new Error(errorMessage));
       } else {
         refetch();
         setIsOpenCreateModal(false);
