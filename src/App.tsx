@@ -34,20 +34,28 @@ function App() {
   const [deleteInferenceProfileIdentifier, setDeleteInferenceProfileIdentifier] = createSignal<string>();
   const [deleteInferenceProfileResult] = createDeleteInferenceProfileResource(
     selectedRegion(), deleteInferenceProfileIdentifier);
+  const [error, setError] = createSignal<Error>();
 
   createEffect(() => {
     if (!createInferenceProfileResult.loading) {
       // Profileの作成が完了(エラーも含む)したら
-      refetch();
-      setIsOpenCreateModal(false);
+      if (createInferenceProfileResult.error) {
+        setError(createInferenceProfileResult.error as unknown as Error);
+      } else {
+        refetch();
+        setIsOpenCreateModal(false);
+      }
     }
 
     if (!deleteInferenceProfileResult.loading) {
       // Profileの削除が完了したら(エラーも含む)
-      refetch();
-      setIsOpenCreateModal(false);
+      if (deleteInferenceProfileResult.error) {
+        setError(createInferenceProfileResult.error as unknown as Error);
+      } else {
+        refetch();
+        setIsOpenCreateModal(false);
+      }
     }
-
   });
 
   return (
@@ -74,7 +82,8 @@ function App() {
                 target: HTMLSelectElement;
               }) => {
                 setSelectedRegion(e.currentTarget.value);
-              }}>
+              }}
+            >
               <Index each={regionsResource()}>
                 {(item) => (
                   <option selected={selectedRegion() === item()} value={item()}>{item()}</option>
@@ -228,6 +237,11 @@ function App() {
           </Show>
         </Show>
       </Show>
+      <Modal isOpen={error() !== undefined} onClose={() => setError(undefined)}>
+        <div class="w-[400px]">
+          <p style={{ color: 'red' }}>{(error() as unknown as Error).message}</p>
+        </div>
+      </Modal>
       <div style={{
         'padding-top': '1rem',
       }}>

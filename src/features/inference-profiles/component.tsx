@@ -59,10 +59,14 @@ function NewInferenceProfileForm(props: NewInferenceProfileFormProps) {
       return;
     }
 
-    if (!validator() || validator()?.()) {
-      setFormData(defaultFormData);
-      props['on:submit'](data);
+    const validatorFn = validator();
+    if (validatorFn && !validatorFn()) {
+      // バリデーションエラーがある場合は送信しない
+      return;
     }
+
+    setFormData(defaultFormData);
+    props['on:submit'](data);
   };
 
   return (
@@ -106,7 +110,10 @@ function NewInferenceProfileForm(props: NewInferenceProfileFormProps) {
                 <label for="copyFrom" class="font-bold">Model Source</label>
               </div>
               <div class="ml-2 mr-auto pb-[1rem]">
-                <select on:change={(e) => setFormData({ ...formData(), copyFrom: e.target.value })}>
+                <select
+                  on:change={(e) => setFormData({ ...formData(), copyFrom: e.target.value })}
+                  aria-placeholder='モデルソースを選択してください'
+                >
                   <For each={systemDefinedInferenceProfilesResource()}>
                     {(item) => <option
                       value={item.inferenceProfileArn}

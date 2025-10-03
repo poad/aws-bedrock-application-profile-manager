@@ -15,12 +15,15 @@ export default function NewTagsForm(props: {
 
   const validator = (): boolean => {
     const keys = items().map(({ key }) => key);
+
+    // 空のタグキーが存在するか否かのチェック
     if (keys.includes('')) {
       setItems(items().map(item =>
         !item.key.length ? { ...item, error: 'タグキーを指定する必要があります' } : item,
       ));
       return false;
     }
+    // 重複したキーの存在チェック
     if (new Set(keys).size !== keys.length) {
       setItems(items().map(item =>
         keys.filter((key) => key === item.key).length > 1 ? { ...item, error: 'タグキーが重複しています' } : item,
@@ -123,7 +126,7 @@ export default function NewTagsForm(props: {
                       on:input={(e) => updateKey(item().id, e.target.value)}
                       on:focusout={() => validate(item().id)}
                       placeholder="キーを入力"
-                      class="min-w-full w-full max-w-full ['on:change']px-2 py-1 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      class="min-w-full w-full max-w-full py-1 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
                     />
                   </div>
                 </td>
@@ -134,7 +137,7 @@ export default function NewTagsForm(props: {
                     on:focus={() => validate(item().id)}
                     on:input={(e) => updateValue(item().id, e.target.value)}
                     placeholder="値を入力"
-                    class="w-[100%] ['on:change']px-2 py-1 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    class="w-[100%] py-1 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
                   />
                 </td>
                 <td class="align-top">
