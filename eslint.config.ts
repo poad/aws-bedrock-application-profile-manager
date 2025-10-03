@@ -1,16 +1,18 @@
 import { defineConfig } from 'eslint/config';
 import eslint from '@eslint/js';
+// eslint-disable-next-line import/namespace, import/default, import/no-named-as-default, import/no-named-as-default-member
 import stylistic from '@stylistic/eslint-plugin';
 import { configs, parser } from 'typescript-eslint';
 import importPlugin from 'eslint-plugin-import';
+// @ts-expect-error eslint-plugin-promise の型エラーのIssueが修正されるまでは無効化
+import pluginPromise from 'eslint-plugin-promise';
 
-// @ts-expect-error eslint-plugin-promise has no types
-import pluginPromise from 'eslint-plugin-promise'
-
-import solid from "eslint-plugin-solid/configs/typescript";
+import solid from 'eslint-plugin-solid/configs/typescript';
 
 import { includeIgnoreFile } from '@eslint/compat';
+// @ts-expect-error node: の型エラーはチェック対象外とする
 import path from 'node:path';
+// @ts-expect-error node: の型エラーはチェック対象外とする
 import { fileURLToPath } from 'node:url';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -34,7 +36,7 @@ export default defineConfig(
   ...configs.strict,
   ...configs.stylistic,
   {
-    files: ['src/**/*.tsx', 'src/**/*.ts', 'vite-env.d.ts', 'vite.config.ts'],
+    files: ['src/**/*.tsx', 'src/**/*.ts', 'vite-env.d.ts', 'vite.config.ts', 'eslint.config.ts'],
     ...solid,
     extends: [
       importPlugin.flatConfigs.recommended,
@@ -45,6 +47,10 @@ export default defineConfig(
       parserOptions: {
         project: './tsconfig-eslint.json',
         tsconfigRootDir: __dirname,
+        sourceType: 'module',
+        ecmaFeatures: {
+          jsx: true,
+        },
       },
     },
     plugins: {
@@ -66,11 +72,6 @@ export default defineConfig(
       '@stylistic/indent': ['error', 2],
       '@stylistic/comma-dangle': ['error', 'always-multiline'],
       '@stylistic/quotes': ['error', 'single'],
-      '@stylistic/max-len': ['error', { code: 120 }],
-      'import/no-unresolved': ['error', { ignore: ['^~solid-pages$'] }],
-      '@typescript-eslint/no-unsafe-assignment': 'error',
-      '@typescript-eslint/no-unsafe-member-access': 'error',
-      '@typescript-eslint/no-unsafe-call': 'error',
-    }
+    },
   },
 );

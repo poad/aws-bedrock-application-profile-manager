@@ -2,9 +2,19 @@ import { createEffect, onCleanup, Show, type JSX } from 'solid-js';
 import type { DOMElement } from 'solid-js/jsx-runtime';
 
 // モーダルコンポーネント
+/**
+ * モーダルダイアログコンポーネント。
+ * @param {object} props - コンポーネントのプロパティ
+ * @param {boolean} props.isOpen - モーダル表示状態
+ * @param {() => void} props['on:close'] - 閉じる時のコールバック
+ * @param {JSX.Element} props.children - モーダル内の表示内容
+ * @remarks
+ * 利用例：各種ダイアログ表示に利用します。
+ * 注意：ESCキーやBackdropクリックで閉じる動作をサポート。アクセシビリティ対応のため、フォーカス管理やキーボード操作も考慮してください。
+ */
 export const Modal = (props: {
   isOpen: boolean,
-  onClose: () => void,
+  'on:close': () => void,
   children: JSX.Element,
 }) => {
   const handleBackdropClick = (e: MouseEvent & {
@@ -13,18 +23,18 @@ export const Modal = (props: {
   }) => {
     // クリックされた要素がbackdrop自体の場合のみ閉じる
     if (e.target === e.currentTarget) {
-      props.onClose();
+      props['on:close']();
     }
   };
 
   const handleCloseClick = () => {
-    props.onClose();
+    props['on:close']();
   };
 
   // ESCキーでモーダルを閉じる
   const handleKeyDown = (e: KeyboardEvent) => {
     if (e.key === 'Escape' && props.isOpen) {
-      props.onClose();
+      props['on:close']();
     }
   };
 
@@ -67,8 +77,6 @@ export const Modal = (props: {
             'color': 'var(--modal-text, black)',
             'border-radius': '8px',
             'box-shadow': '0 25px 50px -12px rgba(0, 0, 0, 0.25)',
-            'max-width': '400px',
-            width: '90%',
             position: 'relative',
           }}
         >

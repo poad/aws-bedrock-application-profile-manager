@@ -1,15 +1,29 @@
 import './App.css';
-import { batch, createSignal, Show } from 'solid-js';
+import { batch, createEffect, createSignal, Index, Show } from 'solid-js';
 import { createRegionsResource } from './features/regions/resources';
-import { createInferenceProfilesResource } from './features/inference-profiles/resources';
-import { env } from './utils';
+import { createApplicationInferenceProfilesResource, createDeleteInferenceProfileResource, createNewInferenceProfileResource } from './features/inference-profiles/resources';
+import { env } from './features/utils';
 import { Loading } from './features/ui/loading';
 import { createTagsForResourceResource } from './features/tags-for-resource/resources';
 import { Modal } from './features/ui/modal';
 import { SiGithub } from 'solid-icons/si';
+import NewInferenceProfileForm, { type FormFields } from './features/inference-profiles/component';
+import { FaSolidTrash } from 'solid-icons/fa';
+import { ConfirmDelete } from './features/ui/confirm-delete';
+import { TagListTable, ViewTagsButton } from './features/ui/tags';
+import type { InferenceProfileSummary } from '@aws-sdk/client-bedrock';
 
 const region: string = env.AWS_REGION ?? 'us-east-1';
 
+/**
+ * AWS Bedrock Application Profile Manager のメインUIコンポーネント。
+ * @remarks
+ * - リージョン選択、プロファイル一覧表示・新規作成・削除、タグ表示などの機能を提供します。
+ * - 各種リソース（リージョン、プロファイル、タグ等）の取得・管理を行い、ローディング・エラー表示も対応しています。
+ * - プロファイル作成・削除・タグ表示はモーダルUIで実装されています。
+ * - 状態管理はSolid.jsのSignalを活用し、UIの状態遷移・バリデーション・エラー処理を行います。
+ * - GitHubリポジトリへのリンクも含まれています。
+ */
 function App() {
   const [selectedRegion, setSelectedRegion] = createSignal<string>(region);
   const [selectedTarget, setSelectedTarget] = createSignal<{
@@ -20,163 +34,175 @@ function App() {
 
   const [regionsResource] = createRegionsResource(selectedRegion());
 
-  const [inferenceProfilesResource] = createInferenceProfilesResource(selectedRegion);
+  const [inferenceProfilesResource, { refetch }] = createApplicationInferenceProfilesResource(selectedRegion);
 
   const [tagsResource] = createTagsForResourceResource(selectedTarget);
 
-  const closeModal = () => setSelectedTarget((prev) => ({...prev, open: false}));
+  const closeModal = () => setSelectedTarget((prev) => ({ ...prev, open: false }));
+  const [isOpenCreateModal, setIsOpenCreateModal] = createSignal<boolean>(false);
+  const [formData, setFormData] = createSignal<FormFields>();
+  const [createInferenceProfileResult] = createNewInferenceProfileResource(selectedRegion(), formData);
+
+  const [deleteInferenceProfileIdentifier, setDeleteInferenceProfileIdentifier] = createSignal<{
+    arn?: string,
+    name?: string
+  }>();
+  const [deleteConfiemedInferenceProfileIdentifier, setDeleteConfiemedInferenceProfileIdentifier] = createSignal<string>();
+  const [deleteInferenceProfileResult] = createDeleteInferenceProfileResource(
+    selectedRegion(), deleteConfiemedInferenceProfileIdentifier);
+  const [error, setError] = createSignal<Error>();
+
+  createEffect(() => {
+    if (!createInferenceProfileResult.loading) {
+      // Profileの作成が完了(エラーも含む)したら
+      if (createInferenceProfileResult.error) {
+        const error = createInferenceProfileResult.error;
+        const errorMessage = error instanceof Error ? error.message : 'プロファイル作成中にエラーが発生しました';
+        setError(new Error(errorMessage));
+      } else {
+        refetch();
+        setIsOpenCreateModal(false);
+      }
+    }
+
+    if (!deleteInferenceProfileResult.loading) {
+      // Profileの削除が完了したら(エラーも含む)
+      if (deleteInferenceProfileResult.error) {
+        const error = deleteInferenceProfileResult.error;
+        const errorMessage = error instanceof Error ? error.message : String(error);
+        setError(new Error(`プロファイル削除エラー: ${errorMessage}`));
+      } else {
+        refetch();
+        setDeleteInferenceProfileIdentifier(undefined);
+      }
+    }
+  });
+
+  const handleOnChangeRegion = (e: Event & {
+    currentTarget: HTMLSelectElement;
+    target: HTMLSelectElement;
+  }) => {
+    setSelectedRegion(e.currentTarget.value);
+  };
+
+  const handleClickViewTags = (item: () => InferenceProfileSummary) => {
+    {
+      batch(() => {
+        setSelectedTarget({
+          region: selectedRegion(),
+          arn: item().inferenceProfileArn ?? '',
+          open: true,
+        });
+      });
+    }
+  };
 
   return (
     <>
       <h1>AWS Bedrock Application Profile Manager</h1>
-      <Show when={regionsResource.error as unknown as Error}>
-        <p style={{ color: 'red' }}>{(regionsResource.error as unknown as Error).message}</p>
-      </Show>
-      <Show when={!regionsResource.error}>
-        <Show when={regionsResource.loading}>
-          <Loading />
-        </Show>
-        <Show when={!regionsResource.loading}>
-          <select on:change={(e: Event & {
-            currentTarget: HTMLSelectElement;
-            target: HTMLSelectElement;
-          }) => {
-            setSelectedRegion(e.currentTarget.value);
-          }}>
-            {regionsResource()?.map((item) => (
-              <option selected={selectedRegion() === item} value={item}>{item}</option>
-            ))}
-          </select>
+      <Show
+        when={!regionsResource.error}
+        fallback={
+          <p style={{ color: 'red' }}>{(regionsResource.error as unknown as Error).message}</p>
+        }>
+        <Show when={!regionsResource.loading} fallback={<Loading />}>
+          <div class="flex items-center justify-between">
+            <select
+              class="ml-auto mr-auto"
+              on:change={handleOnChangeRegion}
+            >
+              <Index each={regionsResource()}>
+                {(item) => (
+                  <option selected={selectedRegion() === item()} value={item()}>{item()}</option>
+                )}
+              </Index>
+            </select>
+            <button class="mr-0" on:click={() => setIsOpenCreateModal(true)}>New</button>
+          </div>
 
-          <Show when={inferenceProfilesResource.error as unknown as Error}>
-            <p style={{ color: 'red' }}>{(inferenceProfilesResource.error as unknown as Error).message}</p>
-          </Show>
-          <Show when={!inferenceProfilesResource.error}>
-            <Show when={inferenceProfilesResource.loading}>
-              <Loading />
-            </Show>
-            <Show when={!inferenceProfilesResource.loading}>
-              <table>
+          <Modal isOpen={isOpenCreateModal()} on:close={() => setIsOpenCreateModal(false)}>
+            <NewInferenceProfileForm
+              region={selectedRegion()}
+              on:submit={(data: FormFields) => {
+                setFormData(data);
+              }}
+              on:cancel={() => {
+                setIsOpenCreateModal(false);
+              }} />
+          </Modal>
+
+          <Show
+            when={!inferenceProfilesResource.error}
+            fallback={
+              <p style={{ color: 'red' }}>{(inferenceProfilesResource.error as unknown as Error).message}</p>
+            }>
+            <Show when={!inferenceProfilesResource.loading} fallback={<Loading />}>
+              <table class="profiles-table">
                 <tbody>
                   <tr>
-                    <th>Inference Profile Name</th>
-                    <th>Inference Profile ARN</th>
-                    <th>Models</th>
-                    <th>Tags</th>
+                    <th>Inference Profile Name</th><th>Inference Profile ARN</th><th>Models</th><th>Tags</th><th />
                   </tr>
-                  {inferenceProfilesResource()?.map((item) => (
-                    <tr>
-                      <td>{item.inferenceProfileName}</td>
-                      <td>{item.inferenceProfileArn}</td>
-                      <td>
-                        <ul>
-                          {item.models?.map((model) => (<li>{model.modelArn}</li>))}
-                        </ul>
-                      </td>
-                      <td>
-                        <button
-                          type="button"
-                          disabled={
-                            // モーダルが開いているときは全てのボタンを無効化
-                            selectedTarget().open
-                          }
-                          aria-label="View Tags"
-                          on:click={() => {
-                            batch(() => {
-                              setSelectedTarget({
-                                region: selectedRegion(),
-                                arn: item.inferenceProfileArn ?? '',
-                                open: true,
-                              });
-                            });
-                          }}>tags</button></td>
-                    </tr>
-                  ))}
+                  <Index each={inferenceProfilesResource()}>
+                    {(item) => (
+                      <tr>
+                        <td>{item().inferenceProfileName}</td>
+                        <td>{item().inferenceProfileArn}</td>
+                        <td><ul>{item().models?.map((model) => (<li>{model.modelArn}</li>))}</ul></td>
+                        <td>
+                          <ViewTagsButton
+                            disabled={
+                              // モーダルが開いているときは全てのボタンを無効化
+                              selectedTarget().open
+                            }
+                            on:click={() => handleClickViewTags(item)}
+                          />
+                        </td>
+                        <td>
+                          <button
+                            class="icon cancel"
+                            disabled={
+                              // モーダルが開いているときは全てのボタンを無効化
+                              selectedTarget().open
+                            }
+                            aria-label="Delete profile"
+                            on:click={() => setDeleteInferenceProfileIdentifier(
+                              { arn: item().inferenceProfileArn, name: item().inferenceProfileName })}
+                          >
+                            <FaSolidTrash />
+                          </button>
+                        </td>
+                      </tr>
+                    )}
+                  </Index>
                 </tbody>
               </table>
-              <Modal isOpen={selectedTarget().open} onClose={closeModal}>
-                <Show when={tagsResource.error as unknown as Error}>
-                  <p style={{ color: 'red' }}>{(tagsResource.error as unknown as Error).message}</p>
-                </Show>
-                <Show when={!tagsResource.error}>
-                  <Show when={tagsResource.loading}>
-                    <Loading />
-                  </Show>
-                  <Show when={!tagsResource.loading}>
-                    <div>
-                      <h4>Tags for {selectedTarget().arn}</h4>
-                    </div>
-                    <Show when={tagsResource()?.length === 0}>
-                      <p>タグは設定されていません。</p>
-                    </Show>
-                    <Show when={tagsResource()?.length !== 0}>
-                      <p
-                        style={{
-                          color: 'var(--modal-text, #666)',
-                          'margin-bottom': '24px',
-                          'line-height': '1.5',
-                        }}
-                      >
-                        リソースに付与されているタグの一覧です。
-                      </p>
-                      <table style={{ 'margin-bottom': '24px', width: '100%' }}>
-                        <thead>
-                          <tr>
-                            <th
-                              style={{
-                                'text-align': 'left',
-                                'border-bottom': '1px solid #ddd',
-                                padding: '8px',
-                              }}
-                            >
-                              Key
-                            </th>
-                            <th
-                              style={{
-                                'text-align': 'left',
-                                'border-bottom': '1px solid #ddd',
-                                padding: '8px',
-                              }}
-                            >
-                              Value
-                            </th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {tagsResource()?.map((tag) => (
-                            <tr>
-                              <td
-                                style={{ padding: '8px', 'border-bottom': '1px solid #ddd' }}
-                              >
-                                {tag.key}
-                              </td>
-                              <td
-                                style={{ padding: '8px', 'border-bottom': '1px solid #ddd' }}
-                              >
-                                {tag.value}
-                              </td>
-                            </tr>
-                          ))}
-                        </tbody>
-                      </table>
-                    </Show>
-                    <p
-                      style={{
-                        color: 'var(--modal-text, #666)',
-                        'margin-bottom': '24px',
-                        'line-height': '1.5',
-                      }}
-                    >
-                      タグの編集は、AWS CLI から行ってください。
-                    </p>
-                  </Show>
-                </Show>
+              <Modal isOpen={selectedTarget().open} on:close={closeModal}>
+                <TagListTable targetProfileArn={selectedTarget().arn} tagsResource={tagsResource} />
               </Modal>
             </Show>
           </Show>
         </Show>
       </Show>
-      <p>
+      <Modal
+        isOpen={deleteInferenceProfileIdentifier() !== undefined && deleteInferenceProfileIdentifier()?.arn !== ''}
+        on:close={() => setDeleteInferenceProfileIdentifier(undefined)}
+      >
+        <ConfirmDelete
+          arn={deleteInferenceProfileIdentifier()?.arn ?? ''}
+          name={deleteInferenceProfileIdentifier()?.name ?? ''}
+          on:delete={() => {
+            setDeleteConfiemedInferenceProfileIdentifier(deleteInferenceProfileIdentifier()?.arn ?? '');
+            setDeleteInferenceProfileIdentifier(undefined);
+          }}
+          on:cancel={() => setDeleteInferenceProfileIdentifier(undefined)}
+        />
+      </Modal>
+      <Modal isOpen={error() !== undefined} on:close={() => setError(undefined)}>
+        <div class="w-[400px]">
+          <p style={{ color: 'red' }}>{(error() as unknown as Error).message}</p>
+        </div>
+      </Modal>
+      <div class="pt-[1rem]">
         <a
           href="https://github.com/poad/aws-bedrock-application-profile-manager"
           target="_blank"
@@ -185,7 +211,7 @@ function App() {
         >
           <SiGithub class='github-icon' size={24} />
         </a>
-      </p>
+      </div>
     </>
   );
 }
