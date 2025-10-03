@@ -268,7 +268,7 @@ export function TagListTable(props: {
       </Show>
     </Show>
   </div>
-  )
+  );
 }
 
 export function ViewTagsButton(props: {
@@ -281,5 +281,5 @@ export function ViewTagsButton(props: {
       disabled={props.disabled}
       aria-label="View Tags"
       on:click={props['on:click']}>tags</button>
-  )
+  );
 }

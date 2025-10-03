@@ -79,7 +79,7 @@ function App() {
     target: HTMLSelectElement;
   }) => {
     setSelectedRegion(e.currentTarget.value);
-  }
+  };
 
   const handleClickViewTags = (item: () => InferenceProfileSummary) => {
     {
@@ -91,7 +91,7 @@ function App() {
         });
       });
     }
-  }
+  };
 
   return (
     <>
