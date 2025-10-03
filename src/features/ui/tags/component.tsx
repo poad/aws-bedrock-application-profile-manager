@@ -25,11 +25,12 @@ export function NewTagsForm(props: {
   );
 
   const validator = (): boolean => {
-    const keys = items().map(({ key }) => key);
+    const currentItems = items();
+    const keys = currentItems.map(({ key }) => key);
 
     // 空のタグキーが存在するか否かのチェック
     if (keys.includes('')) {
-      setItems(items().map(item =>
+      setItems(currentItems.map(item =>
         !item.key.length ? { ...item, error: 'タグキーを指定する必要があります' } : item,
       ));
       return false;
@@ -37,7 +38,7 @@ export function NewTagsForm(props: {
 
     // 重複したキーの存在チェック
     if (new Set(keys).size !== keys.length) {
-      setItems(items().map(item =>
+      setItems(currentItems.map(item =>
         keys.filter((key) => key === item.key).length > 1 ? { ...item, error: 'タグキーが重複しています' } : item,
       ));
       return false;
@@ -52,7 +53,7 @@ export function NewTagsForm(props: {
     }
 
     // 値のパターンチェック
-    if (items().map(({ value }) => value).some((value) => !valuePattern.test(value))) {
+    if (currentItems.map(({ value }) => value).some((value) => !valuePattern.test(value))) {
       setItems((prev) => prev.map(item =>
         !valuePattern.test(item.value) ? { ...item, error: '値に使用できない文字が含まれています' } : item,
       ));
