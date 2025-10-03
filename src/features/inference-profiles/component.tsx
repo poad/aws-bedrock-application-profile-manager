@@ -1,4 +1,4 @@
-import { createSignal, For, Show } from 'solid-js';
+import { createEffect, createSignal, For, Show } from 'solid-js';
 import { createSystemDefinedInferenceProfilesResource } from './resources';
 import { Loading } from '../ui/loading';
 import NewTagsForm from '../ui/tags/component';
@@ -68,6 +68,15 @@ function NewInferenceProfileForm(props: NewInferenceProfileFormProps) {
     setFormData(defaultFormData);
     props['on:submit'](data);
   };
+
+  createEffect(() => {
+    if (!systemDefinedInferenceProfilesResource.loading && !systemDefinedInferenceProfilesResource.error) {
+      const profiles = systemDefinedInferenceProfilesResource();
+      if (profiles && profiles.length > 0) {
+        setFormData({ ...formData(), copyFrom: profiles[0].inferenceProfileArn ?? '' });
+      }
+    }
+  });
 
   return (
     <>

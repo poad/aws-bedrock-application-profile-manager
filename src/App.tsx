@@ -9,6 +9,7 @@ import { Modal } from './features/ui/modal';
 import { SiGithub } from 'solid-icons/si';
 import NewInferenceProfileForm, { type FormFields } from './features/inference-profiles/component';
 import { FaSolidTrash } from 'solid-icons/fa';
+import { ConfirmDelete } from './features/ui/confirm-delete';
 
 const region: string = env.AWS_REGION ?? 'us-east-1';
 
@@ -31,9 +32,13 @@ function App() {
   const [formData, setFormData] = createSignal<FormFields>();
   const [createInferenceProfileResult] = createNewInferenceProfileResource(selectedRegion(), formData);
 
-  const [deleteInferenceProfileIdentifier, setDeleteInferenceProfileIdentifier] = createSignal<string>();
+  const [deleteInferenceProfileIdentifier, setDeleteInferenceProfileIdentifier] = createSignal<{
+    arn?: string,
+    name?: string
+  }>();
+  const [deleteConfiemedInferenceProfileIdentifier, setDeleteConfiemedInferenceProfileIdentifier] = createSignal<string>();
   const [deleteInferenceProfileResult] = createDeleteInferenceProfileResource(
-    selectedRegion(), deleteInferenceProfileIdentifier);
+    selectedRegion(), deleteConfiemedInferenceProfileIdentifier);
   const [error, setError] = createSignal<Error>();
 
   createEffect(() => {
@@ -95,7 +100,7 @@ function App() {
             }} on:click={() => setIsOpenCreateModal(true)}>New</button>
           </div>
 
-          <Modal isOpen={isOpenCreateModal()} onClose={() => setIsOpenCreateModal(false)}>
+          <Modal isOpen={isOpenCreateModal()} on:close={() => setIsOpenCreateModal(false)}>
             <NewInferenceProfileForm
               region={selectedRegion()}
               on:submit={(data: FormFields) => {
@@ -158,7 +163,8 @@ function App() {
                             }
                             aria-label="Delete profile"
 
-                            on:click={() => setDeleteInferenceProfileIdentifier(item().inferenceProfileArn ?? '')}
+                            on:click={() => setDeleteInferenceProfileIdentifier(
+                              {arn: item().inferenceProfileArn, name: item().inferenceProfileName})}
                           >
                             <FaSolidTrash />
                           </button>
@@ -168,7 +174,7 @@ function App() {
                   </Index>
                 </tbody>
               </table>
-              <Modal isOpen={selectedTarget().open} onClose={closeModal}>
+              <Modal isOpen={selectedTarget().open} on:close={closeModal}>
                 <div class="w-[400px]">
                   <Show
                     when={!tagsResource.error}
@@ -237,7 +243,21 @@ function App() {
           </Show>
         </Show>
       </Show>
-      <Modal isOpen={error() !== undefined} onClose={() => setError(undefined)}>
+      <Modal
+        isOpen={deleteInferenceProfileIdentifier() !== undefined && deleteInferenceProfileIdentifier()?.arn !== ''}
+        on:close={() => setDeleteInferenceProfileIdentifier(undefined)}
+      >
+        <ConfirmDelete
+          arn={deleteInferenceProfileIdentifier()?.arn ?? ''}
+          name={deleteInferenceProfileIdentifier()?.name ?? ''}
+          on:delete={() => {
+            setDeleteConfiemedInferenceProfileIdentifier(deleteInferenceProfileIdentifier()?.arn ?? '');
+            setDeleteInferenceProfileIdentifier(undefined);
+          }}
+          on:cancel={() => setDeleteInferenceProfileIdentifier(undefined)}
+        />
+      </Modal>
+      <Modal isOpen={error() !== undefined} on:close={() => setError(undefined)}>
         <div class="w-[400px]">
           <p style={{ color: 'red' }}>{(error() as unknown as Error).message}</p>
         </div>

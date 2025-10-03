@@ -4,7 +4,7 @@ import type { DOMElement } from 'solid-js/jsx-runtime';
 // モーダルコンポーネント
 export const Modal = (props: {
   isOpen: boolean,
-  onClose: () => void,
+  'on:close': () => void,
   children: JSX.Element,
 }) => {
   const handleBackdropClick = (e: MouseEvent & {
@@ -13,18 +13,18 @@ export const Modal = (props: {
   }) => {
     // クリックされた要素がbackdrop自体の場合のみ閉じる
     if (e.target === e.currentTarget) {
-      props.onClose();
+      props['on:close']();
     }
   };
 
   const handleCloseClick = () => {
-    props.onClose();
+    props['on:close']();
   };
 
   // ESCキーでモーダルを閉じる
   const handleKeyDown = (e: KeyboardEvent) => {
     if (e.key === 'Escape' && props.isOpen) {
-      props.onClose();
+      props['on:close']();
     }
   };
 
