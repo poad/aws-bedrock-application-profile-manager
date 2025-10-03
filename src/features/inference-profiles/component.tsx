@@ -2,6 +2,7 @@ import { createEffect, createSignal, For, Show } from 'solid-js';
 import { createSystemDefinedInferenceProfilesResource } from './resources';
 import { Loading } from '../ui/loading';
 import NewTagsForm from '../ui/tags/component';
+import { createFoundationModelsResource } from '../foundation-models/resources';
 
 export interface FormFields {
   inferenceProfileName: string,
@@ -22,6 +23,7 @@ const defaultFormData = { inferenceProfileName: '', copyFrom: '' };
 
 function NewInferenceProfileForm(props: NewInferenceProfileFormProps) {
   const [systemDefinedInferenceProfilesResource] = createSystemDefinedInferenceProfilesResource(props.region);
+  const [faundationModelsResource] = createFoundationModelsResource(props.region);
   const [formData, setFormData] = createSignal<FormFields>(defaultFormData);
   const [validator, setValidator] = createSignal<() => boolean>();
   const [error, setError] = createSignal<string>();
@@ -85,74 +87,89 @@ function NewInferenceProfileForm(props: NewInferenceProfileFormProps) {
         fallback={
           <p style={{ color: 'red' }}>{(systemDefinedInferenceProfilesResource.error as unknown as Error).message}</p>
         }>
-        <Show when={!systemDefinedInferenceProfilesResource.loading} fallback={<Loading />}>
-          <div class='flex flex-col w-[50vw]'>
-            <div class="flex flex-col">
-              <div class="pr-2 mr-auto pb-2">
-                <label for="name" class="font-bold">Inference Profile Name</label>
+        <Show
+          when={!faundationModelsResource.error}
+          fallback={
+            <p style={{ color: 'red' }}>{(faundationModelsResource.error as unknown as Error).message}</p>
+          }>
+          <Show when={!systemDefinedInferenceProfilesResource.loading || !faundationModelsResource.loading}
+            fallback={<Loading />}>
+            <div class='flex flex-col w-[50vw]'>
+              <div class="flex flex-col">
+                <div class="pr-2 mr-auto pb-2">
+                  <label for="name" class="font-bold">Inference Profile Name</label>
+                </div>
+                <div class="ml-2 mr-auto">
+                  <input
+                    class="border border-gray-300 rounded-md px-2 py-1 min-w-[50vw]"
+                    type="text" placeholder="Inference Profile Name"
+                    name="name" value={formData().inferenceProfileName}
+                    on:change={handleNameChange} />
+                </div>
+                <div class="ml-2 mr-auto pb-[1rem]">
+                  <span class="text-red-500">{error()}</span>
+                </div>
               </div>
-              <div class="ml-2 mr-auto">
-                <input
-                  class="border border-gray-300 rounded-md px-2 py-1 min-w-[50vw]"
-                  type="text" placeholder="Inference Profile Name"
-                  name="name" value={formData().inferenceProfileName}
-                  on:change={handleNameChange} />
+              <div class="flex flex-col">
+                <div class="pr-2 mr-auto pb-2">
+                  <label for="description" class="font-bold">Inference Profile Description</label>
+                </div>
+                <div class="ml-2 mr-auto pb-[1rem]">
+                  <input
+                    class="border border-gray-300 rounded-md px-2 py-1 min-w-[50vw]"
+                    type="text" placeholder="Inference Profile Description"
+                    name="description" value={formData().description ?? ''}
+                    on:change={handleChangeDescription} />
+                </div>
               </div>
-              <div class="ml-2 mr-auto pb-[1rem]">
-                <span class="text-red-500">{error()}</span>
+              <div class="flex flex-col">
+                <div class="pr-2 mr-auto pb-2">
+                  <label for="copyFrom" class="font-bold">Model Source</label>
+                </div>
+                <div class="ml-2 mr-auto pb-[1rem]">
+                  <select
+                    on:change={(e) => setFormData({ ...formData(), copyFrom: e.target.value })}
+                    aria-placeholder='モデルソースを選択してください'
+                  >
+                    <For each={systemDefinedInferenceProfilesResource()}>
+                      {(item) => <option
+                        value={item.inferenceProfileArn}
+                        selected={item.inferenceProfileArn === formData().copyFrom}>
+                        {item.inferenceProfileName} ({item.inferenceProfileArn?.split('inference-profile/')[1]})
+                      </option>}
+                    </For>
+                    <For each={faundationModelsResource()}>
+                      {(item) => <option
+                        value={item.modelArn}
+                        selected={item.modelArn === formData().copyFrom}>
+                        {item.providerName} {item.modelName} ({item.modelArn?.split('foundation-model/')[1]})
+                      </option>}
+
+                    </For>
+                  </select>
+                </div>
+              </div>
+              <div class="flex flex-col">
+                <div class="pr-2 mr-auto pb-2">
+                  <span class="font-bold">Tags</span>
+                </div>
+                <div class="ml-2 mr-auto pb-[1rem]">
+                  <NewTagsForm on:change={(tags, validator) => {
+                    setFormData({ ...formData(), tags });
+                    setValidator(() => validator);
+                  }} />
+                </div>
+              </div>
+              <div class="flex flex-row ml-auto mr-auto">
+                <div class="pr-2">
+                  <button class="cancel" on:click={props['on:cancel']}>Cancel</button>
+                </div>
+                <div>
+                  <button on:click={() => handleSubmit()}>Create</button>
+                </div>
               </div>
             </div>
-            <div class="flex flex-col">
-              <div class="pr-2 mr-auto pb-2">
-                <label for="description" class="font-bold">Inference Profile Description</label>
-              </div>
-              <div class="ml-2 mr-auto pb-[1rem]">
-                <input
-                  class="border border-gray-300 rounded-md px-2 py-1 min-w-[50vw]"
-                  type="text" placeholder="Inference Profile Description"
-                  name="description" value={formData().description ?? ''}
-                  on:change={handleChangeDescription} />
-              </div>
-            </div>
-            <div class="flex flex-col">
-              <div class="pr-2 mr-auto pb-2">
-                <label for="copyFrom" class="font-bold">Model Source</label>
-              </div>
-              <div class="ml-2 mr-auto pb-[1rem]">
-                <select
-                  on:change={(e) => setFormData({ ...formData(), copyFrom: e.target.value })}
-                  aria-placeholder='モデルソースを選択してください'
-                >
-                  <For each={systemDefinedInferenceProfilesResource()}>
-                    {(item) => <option
-                      value={item.inferenceProfileArn}
-                      selected={item.inferenceProfileArn === formData().copyFrom}>
-                      {item.inferenceProfileName} ({item.inferenceProfileArn?.split('inference-profile/')[1]})
-                    </option>}
-                  </For>
-                </select>
-              </div>
-            </div>
-            <div class="flex flex-col">
-              <div class="pr-2 mr-auto pb-2">
-                <span class="font-bold">Tags</span>
-              </div>
-              <div class="ml-2 mr-auto pb-[1rem]">
-                <NewTagsForm on:change={(tags, validator) => {
-                  setFormData({ ...formData(), tags });
-                  setValidator(() => validator);
-                }} />
-              </div>
-            </div>
-            <div class="flex flex-row ml-auto mr-auto">
-              <div class="pr-2">
-                <button class="cancel" on:click={props['on:cancel']}>Cancel</button>
-              </div>
-              <div>
-                <button on:click={() => handleSubmit()}>Create</button>
-              </div>
-            </div>
-          </div>
+          </Show>
         </Show>
       </Show>
     </>

@@ -6,6 +6,11 @@ import { IoAddCircleSharp } from 'solid-icons/io';
 const keyPattern = /^[a-zA-Z0-9\s._:/=+@-]*$/;
 const valuePattern = /^[a-zA-Z0-9\s._:/=+@-]*$/;
 
+/**
+ * タグ入力フォームコンポーネント。
+ * @param {object} props - コンポーネントのプロパティ
+ * @param {(data: { key: string, value: string }[], validator: () => boolean) => void} props['on:change'] - 入力変更時のコールバック
+ */
 export default function NewTagsForm(props: {
   'on:change': (data: { key: string, value: string }[], validator: () => boolean) => void
 }) {

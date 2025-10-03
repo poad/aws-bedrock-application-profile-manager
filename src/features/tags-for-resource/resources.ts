@@ -2,6 +2,11 @@ import { BedrockClient, ListTagsForResourceCommand } from '@aws-sdk/client-bedro
 import { createResource, type Accessor } from 'solid-js';
 import { createBedrockClient } from '../bedrock/client';
 
+/**
+ * Bedrockリソース（ARN指定）のタグ一覧を取得するリソースを生成します。
+ * @param {Accessor<{region?: string, arn?: string}>} selected - リージョン・ARN情報のアクセサ
+ * @returns {ReturnType<typeof createResource>} Solid.jsのリソース（{key?: string, value?: string}[]）
+ */
 export const createTagsForResourceResource = (selected: Accessor<{
   region?: string,
   arn?: string,

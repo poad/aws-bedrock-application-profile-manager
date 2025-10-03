@@ -2,6 +2,11 @@ import { AccountClient, ListRegionsCommand, RegionOptStatus, type Region } from 
 import { createResource } from 'solid-js';
 import { credentials } from '../utils';
 
+/**
+ * AWSアカウントの有効リージョン一覧を取得するリソースを生成します。
+ * @param {string} defaultRegion - デフォルトリージョン名
+ * @returns {ReturnType<typeof createResource>} Solid.jsのリソース（string[]）
+ */
 export const createRegionsResource = (defaultRegion: string) => {
   const listRegion = async (props: { client: AccountClient, regions: string[], nextToken?: string }) => {
     const resp = await props.client.send(new ListRegionsCommand({ NextToken: props.nextToken }));

@@ -9,6 +9,11 @@ import { createResource, type Accessor } from 'solid-js';
 import { createBedrockClient } from '../bedrock/client';
 import type { FormFields } from './component';
 
+/**
+ * APPLICATIONタイプのBedrock推論プロファイル一覧を取得するリソースを生成します。
+ * @param {Accessor<string>} selectedRegion - AWSリージョン名のアクセサ
+ * @returns {ReturnType<typeof createResource>} Solid.jsのリソース（InferenceProfileSummary[]）
+ */
 export const createApplicationInferenceProfilesResource = (selectedRegion: Accessor<string>) => {
   const listInferenceProfiles = async (props: {
     client: BedrockClient,
@@ -39,6 +44,11 @@ export const createApplicationInferenceProfilesResource = (selectedRegion: Acces
   });
 };
 
+/**
+ * SYSTEM_DEFINEDタイプのBedrock推論プロファイル一覧を取得するリソースを生成します。
+ * @param {string} selectedRegion - AWSリージョン名
+ * @returns {ReturnType<typeof createResource>} Solid.jsのリソース（InferenceProfileSummary[]）
+ */
 export const createSystemDefinedInferenceProfilesResource = (selectedRegion: string) => {
   const listInferenceProfiles = async (props: {
     client: BedrockClient,
@@ -69,6 +79,12 @@ export const createSystemDefinedInferenceProfilesResource = (selectedRegion: str
   });
 };
 
+/**
+ * 新規Bedrock推論プロファイルを作成するリソースを生成します。
+ * @param {string} region - AWSリージョン名
+ * @param {Accessor<FormFields | undefined>} data - フォームデータのアクセサ
+ * @returns {ReturnType<typeof createResource>} Solid.jsのリソース
+ */
 export const createNewInferenceProfileResource = (
   region: string,
   data: Accessor<FormFields | undefined>,
@@ -89,6 +105,12 @@ export const createNewInferenceProfileResource = (
   });
 };
 
+/**
+ * Bedrock推論プロファイルを削除するリソースを生成します。
+ * @param {string} region - AWSリージョン名
+ * @param {Accessor<string | undefined>} target - 削除対象IDのアクセサ
+ * @returns {ReturnType<typeof createResource>} Solid.jsのリソース
+ */
 export const createDeleteInferenceProfileResource = (region: string, target:  Accessor<string | undefined>) => {
   return createResource(target, async () => {
     const inferenceProfileIdentifier = target();

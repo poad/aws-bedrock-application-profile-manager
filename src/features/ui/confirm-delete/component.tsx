@@ -1,3 +1,11 @@
+/**
+ * 削除確認ダイアログコンポーネント。
+ * @param {object} props - コンポーネントのプロパティ
+ * @param {string} props.name - 削除対象名
+ * @param {string} props.arn - 削除対象ARN
+ * @param {() => void} props['on:delete'] - 削除実行時のコールバック
+ * @param {() => void} props['on:cancel'] - キャンセル時のコールバック
+ */
 export function ConfirmDelete(props: {
   name: string;
   arn: string;

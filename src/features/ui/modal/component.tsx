@@ -2,6 +2,13 @@ import { createEffect, onCleanup, Show, type JSX } from 'solid-js';
 import type { DOMElement } from 'solid-js/jsx-runtime';
 
 // モーダルコンポーネント
+/**
+ * モーダルダイアログコンポーネント。
+ * @param {object} props - コンポーネントのプロパティ
+ * @param {boolean} props.isOpen - モーダル表示状態
+ * @param {() => void} props['on:close'] - 閉じる時のコールバック
+ * @param {JSX.Element} props.children - モーダル内の表示内容
+ */
 export const Modal = (props: {
   isOpen: boolean,
   'on:close': () => void,
