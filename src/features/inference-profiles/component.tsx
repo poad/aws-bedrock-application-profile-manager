@@ -45,7 +45,8 @@ function NewInferenceProfileForm(props: NewInferenceProfileFormProps) {
     currentTarget: HTMLInputElement;
     target: HTMLInputElement;
   }) => {
-    if (e.target.value.match(inferenceProfileNamePattern)?.[0] !== e.target.value) {
+    const match = e.target.value.match(inferenceProfileNamePattern);
+    if (!match || match[0] !== e.target.value) {
       setError('Inference Profile Name は英数字と _ - のみ使用できます。');
       setValidator(() => () => false);
       return;
@@ -58,7 +59,8 @@ function NewInferenceProfileForm(props: NewInferenceProfileFormProps) {
     currentTarget: HTMLInputElement;
     target: HTMLInputElement;
   }) => {
-    if (e.target.value.match(descriptionPattern)?.[0] !== e.target.value) {
+    const match = e.target.value.match(descriptionPattern);
+    if (!match || match[0] !== e.target.value) {
       setError('Description は英数字と _ - : . のみ使用できます。');
       setValidator(() => () => false);
       return;

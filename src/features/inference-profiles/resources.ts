@@ -130,12 +130,20 @@ export const createNewInferenceProfileResource = (
 export const createDeleteInferenceProfileResource = (region: string, target:  Accessor<string | undefined>) => {
   return createResource(target, async () => {
     const inferenceProfileIdentifier = target();
-    if (!inferenceProfileIdentifier) {
+    if (!inferenceProfileIdentifier || inferenceProfileIdentifier.trim() === '') {
       return [];
     }
-    const client = createBedrockClient(region);
-    return await client.send(new DeleteInferenceProfileCommand({
-      inferenceProfileIdentifier,
-    }));
+    if (!region) {
+      throw new Error('リージョンが指定されていません');
+    }
+    try {
+      const client = createBedrockClient(region);
+      return await client.send(new DeleteInferenceProfileCommand({
+        inferenceProfileIdentifier,
+      }));
+    } catch (error) {
+      console.error('推論プロファイルの削除に失敗しました:', error);
+      throw error;
+    }
   });
 };

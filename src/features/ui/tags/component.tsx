@@ -32,6 +32,7 @@ export function NewTagsForm(props: {
       ));
       return false;
     }
+
     // 重複したキーの存在チェック
     if (new Set(keys).size !== keys.length) {
       setItems(items().map(item =>
@@ -39,12 +40,8 @@ export function NewTagsForm(props: {
       ));
       return false;
     }
-    if (keys.includes('')) {
-      setItems(items().map(item =>
-        !item.key.length ? { ...item, error: 'タグキーを指定する必要があります' } : item,
-      ));
-      return false;
-    }
+
+    // キーのパターンチェック
     if (keys.some((key) => !keyPattern.test(key))) {
       setItems((prev) => prev.map(item =>
         !keyPattern.test(item.key) ? { ...item, error: 'キーに使用できない文字が含まれています' } : item,
@@ -52,6 +49,7 @@ export function NewTagsForm(props: {
       return false;
     }
 
+    // 値のパターンチェック
     if (items().map(({ value }) => value).some((value) => !valuePattern.test(value))) {
       setItems((prev) => prev.map(item =>
         !valuePattern.test(item.value) ? { ...item, error: '値に使用できない文字が含まれています' } : item,

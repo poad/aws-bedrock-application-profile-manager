@@ -56,7 +56,8 @@ function App() {
     if (!createInferenceProfileResult.loading) {
       // Profileの作成が完了(エラーも含む)したら
       if (createInferenceProfileResult.error) {
-        setError(createInferenceProfileResult.error as unknown as Error);
+        const error = createInferenceProfileResult.error;
+        setError(error instanceof Error ? error : new Error(String(error)));
       } else {
         refetch();
         setIsOpenCreateModal(false);
@@ -66,10 +67,11 @@ function App() {
     if (!deleteInferenceProfileResult.loading) {
       // Profileの削除が完了したら(エラーも含む)
       if (deleteInferenceProfileResult.error) {
-        setError(deleteInferenceProfileResult.error as unknown as Error);
+        const error = deleteInferenceProfileResult.error;
+        setError(error instanceof Error ? error : new Error(String(error)));
       } else {
         refetch();
-        setIsOpenCreateModal(false);
+        setDeleteInferenceProfileIdentifier(undefined);
       }
     }
   });
