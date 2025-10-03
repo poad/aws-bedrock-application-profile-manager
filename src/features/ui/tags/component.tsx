@@ -4,8 +4,10 @@ import { FaSolidTrash } from 'solid-icons/fa';
 import { IoAddCircleSharp } from 'solid-icons/io';
 import { Loading } from '../loading';
 
+// AWS リソースタグのキーの命名規則チェック用正規表現
 const keyPattern = /^[a-zA-Z0-9+\-=._:/@]{1,128}$/;
-const valuePattern = /^[a-zA-Z0-9+\-=._:/@\s]{0,256}$/;
+// AWS リソースタグの値の命名規則チェック用正規表現
+const valuePattern = /^(?:[a-zA-Z0-9+\-=._:/@][a-zA-Z0-9+\-=._:/@\s]{0,254}[a-zA-Z0-9+\-=._:/@]|[a-zA-Z0-9+\-=._:/@])?$/;
 
 /**
  * タグ入力フォームコンポーネント。
