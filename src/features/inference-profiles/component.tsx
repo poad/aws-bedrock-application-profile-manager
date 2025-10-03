@@ -45,8 +45,8 @@ function NewInferenceProfileForm(props: NewInferenceProfileFormProps) {
     currentTarget: HTMLInputElement;
     target: HTMLInputElement;
   }) => {
-    const match = e.target.value.match(inferenceProfileNamePattern);
-    if (!match || match[0] !== e.target.value) {
+    const value = e.target.value;
+    if (value && !inferenceProfileNamePattern.test(value)) {
       setError('Inference Profile Name は英数字と _ - のみ使用できます。');
       setValidator(() => () => false);
       return;

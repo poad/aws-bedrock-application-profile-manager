@@ -57,7 +57,8 @@ function App() {
       // Profileの作成が完了(エラーも含む)したら
       if (createInferenceProfileResult.error) {
         const error = createInferenceProfileResult.error;
-        setError(error instanceof Error ? error : new Error(String(error)));
+        const errorMessage = error instanceof Error ? error.message : String(error);
+        setError(new Error(`プロファイル作成エラー: ${errorMessage}`));
       } else {
         refetch();
         setIsOpenCreateModal(false);
@@ -68,7 +69,8 @@ function App() {
       // Profileの削除が完了したら(エラーも含む)
       if (deleteInferenceProfileResult.error) {
         const error = deleteInferenceProfileResult.error;
-        setError(error instanceof Error ? error : new Error(String(error)));
+        const errorMessage = error instanceof Error ? error.message : String(error);
+        setError(new Error(`プロファイル削除エラー: ${errorMessage}`));
       } else {
         refetch();
         setDeleteInferenceProfileIdentifier(undefined);

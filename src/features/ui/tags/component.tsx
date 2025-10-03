@@ -72,7 +72,13 @@ export function NewTagsForm(props: {
   };
 
   const updateKey = (id: number, newKey: string) => {
-    const keys = items().map(({ key }) => key);
+    if (newKey.length === 0) {
+      setItems((prev) => prev.map(item =>
+        item.id === id ? { ...item, key: newKey, error: 'タグキーを指定する必要があります' } : item,
+      ));
+      return;
+    }
+    const keys = items().filter((item) => item.id !== id).map(({ key }) => key);
     if (!keyPattern.test(newKey)) {
       setItems((prev) => prev.map(item =>
         item.id === id ? { ...item, key: newKey, error: 'キーに使用できない文字が含まれています' } : item,
