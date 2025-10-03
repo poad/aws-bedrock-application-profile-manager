@@ -187,6 +187,17 @@ export function NewTagsForm(props: {
   );
 }
 
+/**
+ * タグ一覧表示テーブルコンポーネント。
+ * @param {object} props - コンポーネントのプロパティ
+ * @param {string} [props.targetProfileArn] - 対象プロファイルのARN（タグ一覧のタイトルに表示）
+ * @param {Resource<{ key?: string; value?: string; }[]>} props.tagsResource - タグ情報のリソース。エラー・ローディング・データを管理。
+ * @remarks
+ * - AWSリソースに付与されているタグの一覧を表示します。
+ * - タグの編集はできません。編集はAWS CLI等で行ってください。
+ * - 読み込み中はローディング表示、エラー時はエラーメッセージを表示します。
+ * - タグが未設定の場合はその旨を表示します。
+ */
 export function TagListTable(props: {
   readonly targetProfileArn?: string
   readonly tagsResource: Resource<{

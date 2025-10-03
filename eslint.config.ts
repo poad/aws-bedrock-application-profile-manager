@@ -4,12 +4,15 @@ import eslint from '@eslint/js';
 import stylistic from '@stylistic/eslint-plugin';
 import { configs, parser } from 'typescript-eslint';
 import importPlugin from 'eslint-plugin-import';
+// @ts-expect-error eslint-plugin-promise の型エラーのIssueが修正されるまでは無効化
 import pluginPromise from 'eslint-plugin-promise';
 
 import solid from 'eslint-plugin-solid/configs/typescript';
 
 import { includeIgnoreFile } from '@eslint/compat';
+// @ts-expect-error node: の型エラーはチェック対象外とする
 import path from 'node:path';
+// @ts-expect-error node: の型エラーはチェック対象外とする
 import { fileURLToPath } from 'node:url';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -29,7 +32,6 @@ export default defineConfig(
     ],
   },
   eslint.configs.recommended,
-  // @ts-expect-error eslint-plugin-promise の型エラーのIssueが修正されるまでは無効化
   pluginPromise.configs['flat/recommended'],
   ...configs.recommended,
   {

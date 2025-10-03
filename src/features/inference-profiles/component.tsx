@@ -21,6 +21,19 @@ const inferenceProfileNamePattern = /^[0-9a-zA-Z]([0-9a-zA-Z _-]*[0-9a-zA-Z])?$/
 const descriptionPattern = /^[0-9a-zA-Z:.][0-9a-zA-Z:. _-]*$/;
 const defaultFormData = { inferenceProfileName: '', copyFrom: '' };
 
+/**
+ * 新規推論プロファイル作成フォームコンポーネント。
+ * @param {object} props - コンポーネントのプロパティ
+ * @param {string} props.region - 対象リージョン。モデル・プロファイル取得に利用。
+ * @param {(data: FormFields) => void} props['on:submit'] - フォーム送信時のコールバック。バリデーション通過時のみ呼ばれる。
+ * @param {() => void} props['on:cancel'] - キャンセル時のコールバック。
+ * @remarks
+ * - Inference Profile Name, Description, モデルソース、タグを入力できます。
+ * - 必須項目・入力値のバリデーション（パターンチェック）・エラー表示を行います。
+ * - モデルソースはシステム定義プロファイルまたはファンデーションモデルから選択可能です。
+ * - タグ入力は NewTagsForm を利用し、バリデーションも連携します。
+ * - 送信時はバリデーションを全て通過した場合のみ on:submit が呼ばれます。
+ */
 function NewInferenceProfileForm(props: NewInferenceProfileFormProps) {
   const [systemDefinedInferenceProfilesResource] = createSystemDefinedInferenceProfilesResource(props.region);
   const [faundationModelsResource] = createFoundationModelsResource(props.region);

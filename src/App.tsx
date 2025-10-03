@@ -15,6 +15,15 @@ import type { InferenceProfileSummary } from '@aws-sdk/client-bedrock';
 
 const region: string = env.AWS_REGION ?? 'us-east-1';
 
+/**
+ * AWS Bedrock Application Profile Manager のメインUIコンポーネント。
+ * @remarks
+ * - リージョン選択、プロファイル一覧表示・新規作成・削除、タグ表示などの機能を提供します。
+ * - 各種リソース（リージョン、プロファイル、タグ等）の取得・管理を行い、ローディング・エラー表示も対応しています。
+ * - プロファイル作成・削除・タグ表示はモーダルUIで実装されています。
+ * - 状態管理はSolid.jsのSignalを活用し、UIの状態遷移・バリデーション・エラー処理を行います。
+ * - GitHubリポジトリへのリンクも含まれています。
+ */
 function App() {
   const [selectedRegion, setSelectedRegion] = createSignal<string>(region);
   const [selectedTarget, setSelectedTarget] = createSignal<{
