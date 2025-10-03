@@ -36,14 +36,16 @@ function App() {
     selectedRegion(), deleteInferenceProfileIdentifier);
 
   createEffect(() => {
-    if (!createInferenceProfileResult.loading && createInferenceProfileResult()) {
-      // Profileの作成が完了したら
+    if (!createInferenceProfileResult.loading) {
+      // Profileの作成が完了(エラーも含む)したら
       refetch();
+      setIsOpenCreateModal(false);
     }
 
-    if (!deleteInferenceProfileResult.loading && createInferenceProfileResult()) {
-      // Profileの削除が完了したら
+    if (!deleteInferenceProfileResult.loading) {
+      // Profileの削除が完了したら(エラーも含む)
       refetch();
+      setIsOpenCreateModal(false);
     }
 
   });
@@ -89,7 +91,6 @@ function App() {
               region={selectedRegion()}
               on:submit={(data: FormFields) => {
                 setFormData(data);
-                setIsOpenCreateModal(false);
               }}
               on:cancel={() => {
                 setIsOpenCreateModal(false);

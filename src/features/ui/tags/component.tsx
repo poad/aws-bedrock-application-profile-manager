@@ -21,6 +21,33 @@ export default function NewTagsForm(props: {
       ));
       return false;
     }
+    if (new Set(keys).size !== keys.length) {
+      setItems(items().map(item =>
+        keys.filter((key) => key === item.key).length > 1 ? { ...item, error: 'タグキーが重複しています' } : item,
+      ));
+      return false;
+    }
+    if (keys.includes('')) {
+      setItems(items().map(item =>
+        !item.key.length ? { ...item, error: 'タグキーを指定する必要があります' } : item,
+      ));
+      return false;
+    }
+    if (keys.some((key) => !keyPattern.test(key))) {
+      setItems((prev) => prev.map(item =>
+        !keyPattern.test(item.key) ? { ...item, error: 'キーに使用できない文字が含まれています' } : item,
+      ));
+      return false;
+    }
+
+    if (items().map(({value}) => value).some((value) => !valuePattern.test(value))) {
+      setItems((prev) => prev.map(item =>
+        !valuePattern.test(item.value) ? { ...item, error: '値に使用できない文字が含まれています' } : item,
+      ));
+      return false;
+
+    }
+
     return true;
   };
 
@@ -34,20 +61,15 @@ export default function NewTagsForm(props: {
 
   const updateKey = (id: number, newKey: string) => {
     const keys = items().map(({ key }) => key);
-    if (keys.includes(newKey)) {
-      setItems(items().map(item =>
-        item.id === id ? { ...item, error: 'キーが重複しています' } : item,
-      ));
-      return;
-    }
     if (!keyPattern.test(newKey)) {
-      setItems(items().map(item =>
-        item.id === id ? { ...item, error: 'キーに使用できない文字が含まれています' } : item,
+      setItems((prev) => prev.map(item =>
+        item.id === id ? { ...item, key: newKey, error: 'キーに使用できない文字が含まれています' } : item,
       ));
       return;
     }
-    setItems(items().map(item =>
-      item.id === id ? { ...item, key: newKey, error: undefined } : item,
+    const error = keys.includes(newKey) ? 'キーが重複しています' : undefined;
+    setItems((prev) => prev.map(item =>
+      item.id === id ? { ...item, key: newKey, error } : item,
     ));
     props['on:change'](items().map(({ key, value }) => ({ key, value })), validator);
   };
@@ -55,7 +77,7 @@ export default function NewTagsForm(props: {
   const updateValue = (id: number, newValue: string) => {
     if (!valuePattern.test(newValue)) {
       setItems(items().map(item =>
-        item.id === id ? { ...item, error: '値に使用できない文字が含まれています' } : item,
+        item.id === id ? { ...item, value: newValue, error: '値に使用できない文字が含まれています' } : item,
       ));
       return;
     }
@@ -112,7 +134,7 @@ export default function NewTagsForm(props: {
                     on:focus={() => validate(item().id)}
                     on:input={(e) => updateValue(item().id, e.target.value)}
                     placeholder="値を入力"
-                    class="w-[100%] 'on:change']px-2 py-1 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    class="w-[100%] ['on:change']px-2 py-1 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
                   />
                 </td>
                 <td class="align-top">
@@ -127,7 +149,7 @@ export default function NewTagsForm(props: {
               <tr>
                 <td colspan={3}>
                   <Show when={item().error}>
-                    <div>
+                    <div class="text-left">
                       <span class="text-red-500">{item().error}</span>
                     </div>
                   </Show>
@@ -137,7 +159,7 @@ export default function NewTagsForm(props: {
           )}
         </Index>
         <tr>
-          <td colspan={3} class="h-[5rem]">
+          <td colspan={3} class="h-[5rem] ml-0 mr-auto text-left">
             <button
               class="icon"
               onClick={addRow}
