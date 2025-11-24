@@ -12,8 +12,8 @@ importers:
         specifier: ^3.936.0
         version: 3.936.0
       '@aws-sdk/client-bedrock':
-        specifier: ^3.936.0
-        version: 3.936.0
+        specifier: ^3.938.0
+        version: 3.938.0
       '@tailwindcss/postcss':
         specifier: ^4.1.17
         version: 4.1.17
@@ -105,8 +105,8 @@ packages:
     resolution: {integrity: sha512-f+9X2puk74GfFVBYtRkf0Oj+kXtTdK/38A+sb7ha2s7szeFMNsOCh8TsiQMXDC5zm84VdATiVVB4WzsynxxdOg==}
     engines: {node: '>=18.0.0'}
 
-  '@aws-sdk/client-bedrock@3.936.0':
-    resolution: {integrity: sha512-kj5n8RTl/fEnDE9leYmdVa4bY2cpw9jeko04jIAfen46Ka2WOska1HCM4jV9c+y4uqyy5FJz4A77IegzbtlHOA==}
+  '@aws-sdk/client-bedrock@3.938.0':
+    resolution: {integrity: sha512-l8GG5EcG9aivOfpdQUvfAaP733AIrVoQF7j5FVxvXR8xEBozyIhObnmLk52bTBIV6MZCMJG9lBlffDZARkBBiA==}
     engines: {node: '>=18.0.0'}
 
   '@aws-sdk/client-sso@3.936.0':
@@ -2452,7 +2452,7 @@ snapshots:
     transitivePeerDependencies:
       - aws-crt
 
-  '@aws-sdk/client-bedrock@3.936.0':
+  '@aws-sdk/client-bedrock@3.938.0':
     dependencies:
       '@aws-crypto/sha256-browser': 5.2.0
       '@aws-crypto/sha256-js': 5.2.0

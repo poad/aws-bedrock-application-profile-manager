@@ -1,17 +1,17 @@
 import './App.css';
 import { batch, createEffect, createSignal, Index, Show } from 'solid-js';
-import { createRegionsResource } from './features/regions/resources';
-import { createApplicationInferenceProfilesResource, createDeleteInferenceProfileResource, createNewInferenceProfileResource } from './features/inference-profiles/resources';
-import { env } from './features/utils';
-import { Loading } from './features/ui/loading';
-import { createTagsForResourceResource } from './features/tags-for-resource/resources';
-import { Modal } from './features/ui/modal';
 import { SiGithub } from 'solid-icons/si';
-import NewInferenceProfileForm, { type FormFields } from './features/inference-profiles/component';
 import { FaSolidTrash } from 'solid-icons/fa';
-import { ConfirmDelete } from './features/ui/confirm-delete';
-import { TagListTable, ViewTagsButton } from './features/ui/tags';
 import type { InferenceProfileSummary } from '@aws-sdk/client-bedrock';
+import { createRegionsResource } from './features/regions/resources.js';
+import { createApplicationInferenceProfilesResource, createDeleteInferenceProfileResource, createNewInferenceProfileResource } from './features/inference-profiles/resources.js';
+import { env } from './features/utils.js';
+import { Loading } from './features/ui/loading/index.js';
+import { createTagsForResourceResource } from './features/tags-for-resource/resources.js';
+import { Modal } from './features/ui/modal/index.js';
+import NewInferenceProfileForm, { type FormFields } from './features/inference-profiles/component.js';
+import { ConfirmDelete } from './features/ui/confirm-delete/index.js';
+import { TagListTable, ViewTagsButton } from './features/ui/tags/index.js';
 
 const region: string = env.AWS_REGION ?? 'us-east-1';
 

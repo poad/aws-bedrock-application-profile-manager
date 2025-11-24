@@ -1,6 +1,6 @@
-import { AccountClient, ListRegionsCommand, RegionOptStatus, type Region } from '@aws-sdk/client-account';
+import { AccountClient, ListRegionsCommand, type Region } from '@aws-sdk/client-account';
 import { createResource } from 'solid-js';
-import { credentials } from '../utils';
+import { credentials } from '../utils.js';
 
 /**
  * AWSアカウントの有効リージョン一覧を取得するリソースを生成します。
@@ -17,8 +17,8 @@ export const createRegionsResource = (defaultRegion: string) => {
 
     const isValidRegion = (r: Region) =>
       r.RegionName !== '' &&
-      r.RegionOptStatus !== RegionOptStatus.DISABLED &&
-      r.RegionOptStatus !== RegionOptStatus.DISABLING;
+      r.RegionOptStatus !== 'DISABLED' &&
+      r.RegionOptStatus !== 'DISABLING';
 
     const regions = props.regions
       .concat((resp.Regions ?? [])

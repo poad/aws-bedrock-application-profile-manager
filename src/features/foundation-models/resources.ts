@@ -4,7 +4,7 @@ import {
   ListFoundationModelsCommand,
 } from '@aws-sdk/client-bedrock';
 import { createResource } from 'solid-js';
-import { createBedrockClient } from '../bedrock/client';
+import { createBedrockClient } from '../bedrock/client.js';
 
 /**
  * 指定したリージョンのBedrock Foundation Models一覧を取得するリソースを生成します。
