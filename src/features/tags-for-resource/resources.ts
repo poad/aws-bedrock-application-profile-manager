@@ -1,6 +1,6 @@
 import { BedrockClient, ListTagsForResourceCommand } from '@aws-sdk/client-bedrock';
 import { createResource, type Accessor } from 'solid-js';
-import { createBedrockClient } from '../bedrock/client';
+import { createBedrockClient } from '../bedrock/client.js';
 
 /**
  * Bedrockリソース（ARN指定）のタグ一覧を取得するリソースを生成します。

@@ -1,5 +1,5 @@
 import { BedrockClient } from '@aws-sdk/client-bedrock';
-import { credentials } from '../utils';
+import { credentials } from '../utils.js';
 
 /**
  * 指定したリージョンでBedrockClientインスタンスを生成します。
