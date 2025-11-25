@@ -75,7 +75,7 @@ export const createSystemDefinedInferenceProfilesResource = (selectedRegion: str
         nextToken: response.nextToken,
       });
     }
-    return inferenceProfileSummaries;
+    return inferenceProfileSummaries.sort((a, b) => b.inferenceProfileArn?.localeCompare(a.inferenceProfileArn ?? '') ?? 0);
   };
 
   return createResource(selectedRegion, async () => {
