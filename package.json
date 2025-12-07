@@ -11,8 +11,8 @@
     "lint-fix": "eslint --fix"
   },
   "dependencies": {
-    "@aws-sdk/client-account": "^3.943.0",
-    "@aws-sdk/client-bedrock": "^3.944.0",
+    "@aws-sdk/client-account": "^3.946.0",
+    "@aws-sdk/client-bedrock": "^3.946.0",
     "@tailwindcss/postcss": "^4.1.17",
     "@tailwindcss/vite": "^4.1.17",
     "postcss": "^8.5.6",
