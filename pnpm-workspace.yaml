@@ -6,3 +6,7 @@ minimumReleaseAgeExclude:
 onlyBuiltDependencies:
   - '@tailwindcss/oxide'
   - esbuild
+
+overrides:
+  seroval@<1.4.1: '>=1.4.1'
+  seroval@<=1.4.0: '>=1.4.1'
