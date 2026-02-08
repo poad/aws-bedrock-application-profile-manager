@@ -11,8 +11,8 @@
     "lint-fix": "eslint --fix"
   },
   "dependencies": {
-    "@aws-sdk/client-account": "^3.982.0",
-    "@aws-sdk/client-bedrock": "^3.982.0",
+    "@aws-sdk/client-account": "^3.985.0",
+    "@aws-sdk/client-bedrock": "^3.985.0",
     "@tailwindcss/postcss": "^4.1.18",
     "@tailwindcss/vite": "^4.1.18",
     "postcss": "^8.5.6",
@@ -25,18 +25,18 @@
     "@eslint/eslintrc": "^3.3.3",
     "@eslint/js": "^9.39.2",
     "@stylistic/eslint-plugin": "^5.7.1",
-    "@types/node": "^25.2.0",
+    "@types/node": "^25.2.1",
     "eslint": "^9.39.2",
     "eslint-import-resolver-typescript": "^4.4.4",
     "eslint-plugin-import": "^2.32.0",
     "eslint-plugin-promise": "^7.2.1",
     "eslint-plugin-solid": "^0.14.5",
     "jiti": "^2.6.1",
-    "pnpm": "^10.28.2",
+    "pnpm": "^10.29.1",
     "typescript": "^5.9.3",
     "typescript-eslint": "^8.54.0",
     "vite": "^7.3.1",
     "vite-plugin-solid": "^2.11.10"
   },
-  "packageManager": "pnpm@10.28.2"
+  "packageManager": "pnpm@10.29.1"
 }
