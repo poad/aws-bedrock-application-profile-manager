@@ -8,6 +8,7 @@ onlyBuiltDependencies:
   - esbuild
 
 overrides:
-  fast-xml-parser@>=4.3.6 <=5.3.3: '>=5.3.4'
+  fast-xml-parser@<=5.3.3: '>=5.3.4'
   seroval@<1.4.1: '>=1.4.1'
-  seroval@<=1.4.0: '>=1.4.1'
+  '@eslint/js': "^9"
+  'eslint': "^9"
