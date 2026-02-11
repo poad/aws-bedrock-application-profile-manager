@@ -46,7 +46,7 @@ importers:
         specifier: ^3.3.3
         version: 3.3.3
       '@eslint/js':
-        specifier: ^9.39.2
+        specifier: ^9
         version: 9.39.2
       '@stylistic/eslint-plugin':
         specifier: ^5.8.0
@@ -55,7 +55,7 @@ importers:
         specifier: ^25.2.2
         version: 25.2.2
       eslint:
-        specifier: ^9.39.2
+        specifier: ^9
         version: 9.39.2(jiti@2.6.1)
       eslint-import-resolver-typescript:
         specifier: ^4.4.4
@@ -73,8 +73,8 @@ importers:
         specifier: ^2.6.1
         version: 2.6.1
       pnpm:
-        specifier: ^10.29.2
-        version: 10.29.2
+        specifier: ^10.29.3
+        version: 10.29.3
       typescript:
         specifier: ^5.9.3
         version: 5.9.3
@@ -2001,8 +2001,8 @@ packages:
     resolution: {integrity: sha512-5gTmgEY/sqK6gFXLIsQNH19lWb4ebPDLA4SdLP7dsWkIXHWlG66oPuVvXSGFPppYZz8ZDZq0dYYrbHfBCVUb1Q==}
     engines: {node: '>=12'}
 
-  pnpm@10.29.2:
-    resolution: {integrity: sha512-vvQ/p1nZH9LaSzGaWg0T73pFu5haPXNCBYRw+dIFGjuoZ05ilnJlRobvlEOtE6gtor657rPgIhyHuBVP/510uA==}
+  pnpm@10.29.3:
+    resolution: {integrity: sha512-SY4ftMylqgbB3PJhHm+vxQly/+cYmZjECekN50VmREKY/+Q+bNKs3Hdboap8xeCSqLcFTIEbqMV3D4RpPTPS3A==}
     engines: {node: '>=18.12'}
     hasBin: true
 
@@ -4624,7 +4624,7 @@ snapshots:
 
   picomatch@4.0.3: {}
 
-  pnpm@10.29.2: {}
+  pnpm@10.29.3: {}
 
   possible-typed-array-names@1.1.0: {}
 
