@@ -11,8 +11,8 @@
     "lint-fix": "eslint --fix"
   },
   "dependencies": {
-    "@aws-sdk/client-account": "^3.1010.0",
-    "@aws-sdk/client-bedrock": "^3.1010.0",
+    "@aws-sdk/client-account": "^3.1011.0",
+    "@aws-sdk/client-bedrock": "^3.1011.0",
     "@tailwindcss/postcss": "^4.2.1",
     "@tailwindcss/vite": "^4.2.1",
     "postcss": "^8.5.8",
@@ -23,10 +23,10 @@
   "devDependencies": {
     "@eslint/compat": "^2.0.3",
     "@eslint/eslintrc": "^3.3.5",
-    "@eslint/js": "^10.0.1",
+    "@eslint/js": "^9.39.4",
     "@stylistic/eslint-plugin": "^5.10.0",
     "@types/node": "^25.5.0",
-    "eslint": "^10.0.3",
+    "eslint": "^9.39.4",
     "eslint-import-resolver-typescript": "^4.4.4",
     "eslint-plugin-import": "^2.32.0",
     "eslint-plugin-promise": "^7.2.1",
